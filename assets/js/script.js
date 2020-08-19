@@ -207,8 +207,16 @@ var dragTaskHandler = function(event) {
     var taskId = event.target.getAttribute('data-task-id');
     event.dataTransfer.setData('text/plain', taskId);
     var getId = event.dataTransfer.getData('text/plain');
-    console.log('getId:', getId, typeof getId);
 }
+
+var dropZoneDragHandler = function(event) {
+    var taskListEl = event.target.closest('.task-list');
+    if (taskListEl) {
+        event.preventDefault();
+    }
+};
+
+
 // When formEl elements are submitted, perform the taskFormHandler function.
 formEl.addEventListener("submit", taskFormHandler);
 
@@ -220,3 +228,6 @@ pageContentEl.addEventListener('change', taskStatusChangeHandler);
 
 // When pageContentEl elements start to be dragged, perform the dragTaskHandler function.
 pageContentEl.addEventListener('dragstart', dragTaskHandler);
+
+// When dragged pageContentEl elements are hovered over another element, perform the dropZoneDragHandler function.
+pageContentEl.addEventListener('dragover', dropZoneDragHandler);
