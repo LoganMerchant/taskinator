@@ -209,12 +209,23 @@ var dragTaskHandler = function(event) {
     var getId = event.dataTransfer.getData('text/plain');
 }
 
+
+var dragLeaveHandler = function(event) {
+    var taskListEl = event.target.closest('.task-list');
+    if (taskListEl) {
+        taskListEl.removeAttribute('style');
+    }
+}
+
+
 var dropZoneDragHandler = function(event) {
     var taskListEl = event.target.closest('.task-list');
     if (taskListEl) {
         event.preventDefault();
+        taskListEl.setAttribute('style', 'background: rgba(68, 233, 255, .7); border-style: dashed;');
     }
 };
+
 
 var dropTaskHandler = function(event) {
     // id gets the 'text/plain' data stored in `dataTransfer`.
@@ -238,6 +249,8 @@ var dropTaskHandler = function(event) {
         statusSelectEl.selectedIndex = 2;
     };
 
+    dropZoneEl.removeAttribute('style');
+
     dropZoneEl.appendChild(draggableElement);
 };
 
@@ -253,6 +266,9 @@ pageContentEl.addEventListener('change', taskStatusChangeHandler);
 
 // When pageContentEl elements start to be dragged, perform the dragTaskHandler function.
 pageContentEl.addEventListener('dragstart', dragTaskHandler);
+
+// When pageContentEl elements are no longer being hovered over, perform the dragLeaveHandler function.
+pageContentEl.addEventListener('dragleave', dragLeaveHandler);
 
 // When dragged pageContentEl elements are hovered over another element, perform the dropZoneDragHandler function.
 pageContentEl.addEventListener('dragover', dropZoneDragHandler);
