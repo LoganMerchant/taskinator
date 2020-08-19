@@ -1,10 +1,14 @@
-// buttonEl selects all HTML elements with the "save-task" id
-var buttonEl = document.querySelector("#save-task");
+// buttonEl selects all HTML elements with the "task-form" id
+var formEl = document.querySelector("#task-form");
 // tasksToDoEl selects all HTML elements with the "tasks-to-do" id
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
 // The createTaskHandler function creates a new list item.
 var createTaskHandler = function() {
+
+    // Prevents the browser from refreshing when the form is submitted.
+    event.preventDefault();
+
     // listItemEl creates a listed item when called.
     var listItemEl = document.createElement("li");
     // listItemEl takes on the class name of "task-item" for styling purposes.
@@ -15,5 +19,5 @@ var createTaskHandler = function() {
     tasksToDoEl.appendChild(listItemEl);
 };
 
-// When buttonEl elements are clicked, perform the createTaskHandler function.
-buttonEl.addEventListener("click", createTaskHandler);
+// When formEl elements are clicked, perform the createTaskHandler function.
+formEl.addEventListener("submit", createTaskHandler);
