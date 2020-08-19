@@ -216,6 +216,31 @@ var dropZoneDragHandler = function(event) {
     }
 };
 
+var dropTaskHandler = function(event) {
+    // id gets the 'text/plain' data stored in `dataTransfer`.
+    var id = event.dataTransfer.getData('text/plain');
+    // draggableElement searches the document for the element with the `data-task-id` of `var id`.
+    var draggableElement = document.querySelector('[data-task-id="' + id + '"]');
+    // dropZoneEl searches up through the event target and finds the closest element with an attribute of `class='task-list'`.
+    var dropZoneEl = event.target.closest('.task-list');
+    // statusType is the `id` of the associated task list.
+    var statusType = dropZoneEl.id;
+    // statusSelectEl searches the draggableElement for a child select element with an attribute of `name=status-change`.
+    var statusSelectEl = draggableElement.querySelector('select[name="status-change"]');
+
+    // The value of statusType will determine the status of the selected task.
+    if (statusType === 'tasks-to-do') {
+        // `ELEMENT.selectedIndex` sets the option's 0-based position on the list. 
+        statusSelectEl.selectedIndex = 0;
+    } else if (statusType === 'tasks-in-progress') {
+        statusSelectEl.selectedIndex = 1;
+    } else if (statusType === 'tasks-completed') {
+        statusSelectEl.selectedIndex = 2;
+    };
+
+    dropZoneEl.appendChild(draggableElement);
+};
+
 
 // When formEl elements are submitted, perform the taskFormHandler function.
 formEl.addEventListener("submit", taskFormHandler);
@@ -231,3 +256,6 @@ pageContentEl.addEventListener('dragstart', dragTaskHandler);
 
 // When dragged pageContentEl elements are hovered over another element, perform the dropZoneDragHandler function.
 pageContentEl.addEventListener('dragover', dropZoneDragHandler);
+
+// When dragged pageContentEl elements are dropped, perform the dropTaskHandler.
+pageContentEl.addEventListener('drop', dropTaskHandler);
