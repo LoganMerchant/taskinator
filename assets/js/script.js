@@ -1,3 +1,5 @@
+// pageContentEl is selecting the `page-selector` id in the HTML doc.
+var pageContentEl = document.querySelector('#page-content');
 // Declares the ID counter to begin at zero.
 var taskIdCounter = 0;
 // buttonEl selects all HTML elements with the "task-form" id
@@ -57,7 +59,7 @@ var createTaskEl = function(taskDataObj) {
 
     // Adds 1 to the ID counter for the next list item.
     taskIdCounter++;
-}
+};
 
 // The createTaskActions function creates a form of options for each list item.
 var createTaskActions = function(taskId) {
@@ -98,8 +100,25 @@ var createTaskActions = function(taskId) {
     }
 
     actionContainerEl.appendChild(statusSelectEl);
+    
     return actionContainerEl;
+};
+
+var taskButtonHandler = function(event) {
+    console.log(event.target);
+
+    if (event.target.matches('.delete-btn')) {
+        var taskId = event.target.getAttribute('data-task-id');
+        deleteTask(taskId);
+    };
+};
+
+var deleteTask = function(taskId) {
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    taskSelected.remove();
 };
 
 // When formEl elements are submitted, perform the taskFormHandler function.
 formEl.addEventListener("submit", taskFormHandler);
+
+pageContentEl.addEventListener('click', taskButtonHandler);
