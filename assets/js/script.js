@@ -12,6 +12,14 @@ var taskFormHandler = function(event) {
     // taskTypeInput gets the VALUE located at the <select> tag with a class of `task-type`.
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
 
+    if (!taskNameInput || !taskTypeInput) {
+        alert("You need to fill out the task form!");
+        return false;
+    }
+
+    // 
+    formEl.reset();
+
     // Sets up an object with the user's inputs as the `name` and `type`.
     var taskDataObj = {
         name: taskNameInput,
