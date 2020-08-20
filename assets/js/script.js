@@ -313,6 +313,7 @@ var saveTasks = function() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
+
 var loadTasks = function() {
     // Gets task items from localStorage.
     tasks = localStorage.getItem('tasks');
@@ -330,23 +331,30 @@ var loadTasks = function() {
 
     // Iterates through the tasks array and creates the elements on the page.
     for (var i = 0; i < tasks.length; i++) {
+        // Sets the taskIdCounter to the iteration's id, set from a previous session. 
         tasks[i].id = taskIdCounter;
 
+        // Creates a <li> with the `task-item` class, and attributes of `draggable=true` and `data-task-id=<current iteration's id>`.
         var listItemEl = document.createElement('li');
         listItemEl.className = 'task-item';
         listItemEl.setAttribute('data-task-id', tasks[i].id);
         listItemEl.setAttribute('draggable', 'true');
 
+        // Creats a <div> with the class `task-info` and innerHTML of the current iteration's name and type. 
         var taskInfoEl = document.createElement('div');
         taskInfoEl.className = 'task-info';
         taskInfoEl.innerHTML = '<h3 class="task-name">' + tasks[i].name + '</h3><span class="task-type">' + tasks[i].type + '</span>';
 
+        // Appends the `taskInfoEl` <div> into the `listItemEl` <li>.
         listItemEl.appendChild(taskInfoEl);
 
+        // Creates the taskActionsEl by passing the current iteration's `id` as the parameter of the `createTaskActions()`.
         var taskActionsEl = createTaskActions(tasks[i].id);
 
+        // Appends the `taskActionsEl` into the `listItemEl` <li>.
         listItemEl.appendChild(taskActionsEl);
 
+        // Depending on the current iteration's status, set the list item's selected index and append it to the corresponding list.
         if (tasks[i].status === 'to do') {
             listItemEl.querySelector('select[name="status-change"]').selectedIndex = 0;
             tasksToDoEl.appendChild(listItemEl);
@@ -358,10 +366,11 @@ var loadTasks = function() {
             tasksCompletedEl.appendChild(listItemEl);
         };
 
+        // Increment the current taskIdCounter by one.
         taskIdCounter++;
-        console.log(listItemEl);
     };
 };
+
 
 loadTasks();
 
