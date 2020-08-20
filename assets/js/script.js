@@ -7,6 +7,9 @@ var taskIdCounter = 0;
 // buttonEl selects all HTML elements with the "task-form" id
 var formEl = document.querySelector("#task-form");
 
+// tasks is an array that will store all of the task information in localStorage.
+var tasks = []
+
 // tasksToDoEl selects all HTML elements with the "tasks-to-do" id
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
@@ -46,6 +49,7 @@ var taskFormHandler = function(event) {
         var taskDataObj = {
             name: taskNameInput,
             type: taskTypeInput,
+            status: "to do",
         };  
         createTaskEl(taskDataObj);
     };
@@ -78,6 +82,10 @@ var createTaskEl = function(taskDataObj) {
     // Inserts the listItemEl into the tasksToDoEl.
     tasksToDoEl.appendChild(listItemEl);
 
+    // Creates and setts an `id` property of `taskDataObj` with a value equal to the current `taskIdCounter` value.
+    taskDataObj.id = taskIdCounter;
+    // Pushes the data stored in `taskDataObj` to the end of the `tasks` array.
+    tasks.push(taskDataObj);
     // Adds 1 to the ID counter for the next list item.
     taskIdCounter++;
 };
@@ -159,7 +167,13 @@ var taskStatusChangeHandler = function(event) {
     } else if (statusValue === 'completed') {
         tasksCompletedEl.appendChild(taskSelected);
     };
-}
+
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === parseInt(taskId)) {
+            tasks[i].status = statusValue
+        }
+    };
+};
 
 
 var editTask = function(taskId) {
@@ -189,6 +203,13 @@ var completeEditTask = function(taskName, taskType, taskId) {
     taskSelected.querySelector('h3.task-name').textContent = taskName;
     taskSelected.querySelector('span.task-type').textContent = taskType;
 
+    for (var i = 0; i < tasks.length; i++) {
+        // If this iteration of `tasks`'s `id` matches the `id` of task being edited, update it's name and type in the `tasks` array. 
+        if (tasks[i].id === parseInt(taskId)) {
+            tasks[i].name = taskName;
+            tasks[i].type = taskType;
+        }
+    };
     alert('Task Updated!');
 
     // Removes the data task id attribute from the form and changes it back to normal.
@@ -200,6 +221,19 @@ var completeEditTask = function(taskName, taskType, taskId) {
 var deleteTask = function(taskId) {
     var taskSelected = document.querySelector('.task-item[data-task-id="' + taskId + '"]');
     taskSelected.remove();
+
+    // Creates new scoped array.
+    var updatedTaskArr = [];
+
+    // If the id of `tasks` DOES NOT equal `taskId`, push this iteration to `updatedTaskArr`.
+    for (var i =0; i <tasks.length; i++) {
+        if (tasks[i].id !== parseInt(taskId)) {
+            updatedTaskArr.push(tasks[i]);
+        }
+    };
+
+    // Syncs the `tasks` array and `updatedTaskArr`
+    tasks = updatedTaskArr;
 };
 
 
@@ -207,7 +241,7 @@ var dragTaskHandler = function(event) {
     var taskId = event.target.getAttribute('data-task-id');
     event.dataTransfer.setData('text/plain', taskId);
     var getId = event.dataTransfer.getData('text/plain');
-}
+};
 
 
 var dragLeaveHandler = function(event) {
@@ -215,7 +249,7 @@ var dragLeaveHandler = function(event) {
     if (taskListEl) {
         taskListEl.removeAttribute('style');
     }
-}
+};
 
 
 var dropZoneDragHandler = function(event) {
@@ -252,6 +286,13 @@ var dropTaskHandler = function(event) {
     dropZoneEl.removeAttribute('style');
 
     dropZoneEl.appendChild(draggableElement);
+
+    // If the id of this iteration through `tasks` matches the id pulled on dragstart, update the status of `tasks[i]` as well. 
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === parseInt(id)) {
+            tasks[i].status = statusSelectEl.value.toLowerCase();
+        }
+    };
 };
 
 
